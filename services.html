@@ -1,82 +1,203 @@
 <!DOCTYPE html>
 <html lang="rw">
 <head>
-  <meta charset="UTF-8">
-  <title>Serivisi za ADEPR</title>
+  <meta charset="UTF-8" />
+  <title>Serivisi - ADEPR Church</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <style>
     body {
+      margin: 0;
       font-family: 'Segoe UI', sans-serif;
-      background-color: #f0f9f6;
-      padding: 30px;
+      background: #f9fdfc;
     }
-
-    h2 {
+    header {
+      background: #007b5e;
+      color: white;
+      padding: 20px;
       text-align: center;
+    }
+    nav {
+      background: #005c47;
+      padding: 10px;
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+    }
+    nav a {
+      color: white;
+      text-decoration: none;
+      font-weight: bold;
+    }
+    nav a:hover {
+      text-decoration: underline;
+    }
+    .section {
+      padding: 40px 20px;
+      max-width: 800px;
+      margin: auto;
+    }
+    .section h2 {
       color: #007b5e;
-      margin-bottom: 40px;
+      margin-bottom: 20px;
+      text-align: center;
     }
-
-    .level {
-      background: white;
-      border-radius: 12px;
-      padding: 25px;
-      margin-bottom: 30px;
-      box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      background: #ffffff;
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
     }
-
-    .level h3 {
-      color: #005c47;
-      margin-bottom: 10px;
+    label {
+      font-weight: bold;
     }
-
-    ul {
-      list-style: disc;
-      padding-left: 20px;
+    input, select, textarea {
+      padding: 10px;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+      font-size: 1em;
     }
-
-    li {
-      margin-bottom: 8px;
+    button {
+      background: #007b5e;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 1em;
+    }
+    button:hover {
+      background: #005c47;
     }
   </style>
 </head>
 <body>
-  <h2>Serivisi zitangwa na ADEPR</h2>
 
-  <div class="level">
-    <h3>Ku rwego rw’Itorero (Local Church)</h3>
-    <ul>
-      <li>Icyemezo cy’imyitwarire</li>
-      <li>Icyemezo cy’ubunyamuryango</li>
-      <li>Gusaba gusengerwa / kuganirizwa</li>
-      <li>Kwiyandikisha nk’umukristo mushya</li>
-      <li>Kwiyandikisha mu itsinda ry’abaririmbyi, CEP, abakobwa n’abandi</li>
-    </ul>
-  </div>
+<header>
+  <h1>Gusaba Serivisi - ADEPR Church</h1>
+</header>
 
-  <div class="level">
-    <h3>Ku rwego rwa Paroise</h3>
-    <ul>
-      <li>Gusaba transfert y’itorero</li>
-      <li>Gusaba inkunga ya paroisse</li>
-    </ul>
-  </div>
+<nav>
+  <a href="index.html">Ahabanza</a>
+  <a href="church-map.html">Insengero</a>
+  <a href="login.html">Injira</a>
+</nav>
 
-  <div class="level">
-    <h3>Ku rwego rw’Ururembo</h3>
-    <ul>
-      <li>Gusaba amahugurwa y’abayobozi</li>
-      <li>Inkunga ku mishinga y’itorero</li>
-    </ul>
-  </div>
+<section class="section">
+  <h2>Uzuza Formu yo Gusaba Serivisi</h2>
+  <form action="#" method="post">
+    <label for="names">Amazina Yuzuye:</label>
+    <input type="text" id="names" name="names" required />
 
-  <div class="level">
-    <h3>Ku rwego rw’igihugu (Ibiro Bikuru)</h3>
-    <ul>
-      <li>Gusaba guhabwa umushumba wemewe</li>
-      <li>Inkunga yihariye ku rwego rw’igihugu</li>
-      <li>Gusaba transfert y’igihugu</li>
-    </ul>
-  </div>
+    <label for="phone">Telefoni:</label>
+    <input type="tel" id="phone" name="phone" required />
+
+    <label for="email">Email:</label>
+    <input type="email" id="email" name="email" />
+
+    <label for="region">Hitamo Ururembo:</label>
+    <select id="region" name="region" required>
+      <option value="">-- Hitamo Ururembo --</option>
+      <option value="kigali">Kigali</option>
+      <option value="northern">Amajyaruguru</option>
+      <option value="southern">Amajyepfo</option>
+      <option value="western">Iburengerazuba</option>
+      <option value="eastern">Iburasirazuba</option>
+    </select>
+
+    <label for="district">Hitamo Akarere:</label>
+    <select id="district" name="district" required>
+      <option value="">-- Hitamo Akarere --</option>
+    </select>
+
+    <label for="church">Hitamo Itorero:</label>
+    <select id="church" name="church" required>
+      <option value="">-- Hitamo Itorero --</option>
+    </select>
+
+    <label for="level">Injiza Urwego ushaka ko rugusubiza:</label>
+    <select id="level" name="level" required>
+      <option value="">-- Hitamo Urwego --</option>
+      <option value="itorero">Itorero</option>
+      <option value="paroisse">Paroisse</option>
+      <option value="ururembo">Ururembo</option>
+      <option value="ubuyobozi bukuru">Ubuyobozi Bukuru bwa ADEPR</option>
+    </select>
+
+    <label for="service">Hitamo Serivisi:</label>
+    <select id="service" name="service" required>
+      <option value="">-- Hitamo --</option>
+      <option value="kwiyandikisha">Kwiyandikisha nk’umukristo mushya</option>
+      <option value="icyemezo">Gusaba icyemezo cy’imyitwarire</option>
+      <option value="transfert">Gusaba transfert y’itorero</option>
+      <option value="inkunga">Gusaba inkunga</option>
+      <option value="amasengesho">Gusaba gusengerwa / inama</option>
+    </select>
+
+    <label for="message">Ibisobanuro Byiyongera (Optional):</label>
+    <textarea id="message" name="message" rows="4"></textarea>
+
+    <button type="submit">Ohereza</button>
+  </form>
+</section>
+
+<script>
+  const regionDistrictMap = {
+    kigali: ["Gasabo", "Kicukiro", "Nyarugenge"],
+    northern: ["Musanze", "Burera", "Gicumbi"],
+    southern: ["Huye", "Gisagara", "Nyanza"],
+    western: ["Rusizi", "Rubavu", "Karongi"],
+    eastern: ["Nyagatare", "Kayonza", "Ngoma"]
+  };
+
+  const districtChurchMap = {
+    Gasabo: ["ADEPR Kimisagara", "ADEPR Remera"],
+    Kicukiro: ["ADEPR Kicukiro", "ADEPR Kanombe"],
+    Nyarugenge: ["ADEPR Kiyovu", "ADEPR Nyamirambo"],
+    Musanze: ["ADEPR Musanze"],
+    Burera: ["ADEPR Burera"],
+    Gicumbi: ["ADEPR Gicumbi"],
+    Huye: ["ADEPR Huye"],
+    Gisagara: ["ADEPR Gisagara"],
+    Nyanza: ["ADEPR Nyanza"],
+    Rusizi: ["ADEPR Rusizi"],
+    Rubavu: ["ADEPR Rubavu"],
+    Karongi: ["ADEPR Karongi"],
+    Nyagatare: ["ADEPR Nyagatare"],
+    Kayonza: ["ADEPR Kayonza"],
+    Ngoma: ["ADEPR Ngoma"]
+  };
+
+  const regionSelect = document.getElementById("region");
+  const districtSelect = document.getElementById("district");
+  const churchSelect = document.getElementById("church");
+
+  regionSelect.addEventListener("change", () => {
+    const districts = regionDistrictMap[regionSelect.value] || [];
+    districtSelect.innerHTML = '<option value="">-- Hitamo Akarere --</option>';
+    districts.forEach(district => {
+      const option = document.createElement("option");
+      option.value = district;
+      option.textContent = district;
+      districtSelect.appendChild(option);
+    });
+    // Clear churches when region changes
+    churchSelect.innerHTML = '<option value="">-- Hitamo Itorero --</option>';
+  });
+
+  districtSelect.addEventListener("change", () => {
+    const churches = districtChurchMap[districtSelect.value] || [];
+    churchSelect.innerHTML = '<option value="">-- Hitamo Itorero --</option>';
+    churches.forEach(church => {
+      const option = document.createElement("option");
+      option.value = church;
+      option.textContent = church;
+      churchSelect.appendChild(option);
+    });
+  });
+</script>
 
 </body>
 </html>
