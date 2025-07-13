@@ -1,223 +1,215 @@
 <!DOCTYPE html>
 <html lang="rw">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ADEPR Church</title>
+  <meta charset="UTF-8">
+  <title>ADEPR Church - Urubuga Nyamukuru</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     body {
-      font-family: 'Segoe UI', sans-serif;
       margin: 0;
-      padding: 0;
-      background: linear-gradient(to right, #f0f4f3, #e2f0ec);
-      color: #333;
+      font-family: 'Segoe UI', sans-serif;
+      background: #f9fdfc;
     }
 
     header {
-      background-color: #005c47;
+      background: #007b5e;
       color: white;
-      padding: 30px 20px;
+      padding: 20px;
       text-align: center;
-      box-shadow: 0 4px 6px rgba(0,0,0,0.2);
     }
 
     nav {
-      background-color: #007b5e;
+      background: #005c47;
+      padding: 10px;
       display: flex;
       justify-content: center;
-      padding: 12px;
+      gap: 20px;
     }
 
     nav a {
       color: white;
       text-decoration: none;
-      margin: 0 15px;
       font-weight: bold;
-      transition: color 0.3s;
     }
 
     nav a:hover {
-      color: #ffe600;
+      text-decoration: underline;
     }
 
     .hero {
-      background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url('church.jpg') center/cover no-repeat;
+      background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('https://images.unsplash.com/photo-1529692236671-f1a3d7ee85f4') no-repeat center center/cover;
       color: white;
-      padding: 100px 20px;
+      padding: 60px 20px;
       text-align: center;
     }
 
     .hero h1 {
-      font-size: 2.8em;
-      margin-bottom: 15px;
+      font-size: 3.5em;
+      margin-bottom: 20px;
+      animation: pulse 2.5s infinite;
     }
 
-    .btn {
-      background-color: #ffe600;
-      color: #004f3e;
-      padding: 12px 25px;
-      text-decoration: none;
-      font-weight: bold;
-      border-radius: 8px;
-      transition: background 0.3s;
+    @keyframes pulse {
+      0% {
+        transform: scale(1);
+        opacity: 1;
+      }
+      50% {
+        transform: scale(1.05);
+        opacity: 0.8;
+      }
+      100% {
+        transform: scale(1);
+        opacity: 1;
+      }
     }
 
-    .btn:hover {
-      background-color: #ffffff;
+    .hero p {
+      font-size: 1.5em;
+      margin: 0;
     }
 
-    section {
-      padding: 40px 20px;
+    .section {
+      padding: 50px 20px;
       max-width: 1000px;
       margin: auto;
     }
 
-    h2 {
+    .section h2 {
       color: #007b5e;
-      margin-bottom: 15px;
+      margin-bottom: 20px;
     }
 
-    footer {
-      background-color: #004235;
+    .footer {
+      background: #003d31;
       color: white;
-      text-align: center;
-      padding: 25px 10px;
-      font-size: 14px;
-    }
-
-    footer p {
-      margin: 5px;
-    }
-
-    .admin-login, .services, .locations {
-      background-color: #ffffff;
-      border: 2px solid #cce7e1;
-      padding: 30px;
-      margin-top: 40px;
-      text-align: center;
-      border-radius: 12px;
-      box-shadow: 0 0 15px rgba(0,0,0,0.1);
-      transition: all 0.3s ease;
-    }
-
-    .admin-login:hover, .services:hover, .locations:hover {
-      box-shadow: 0 0 20px rgba(0,0,0,0.15);
-    }
-
-    .admin-login input[type="text"],
-    .admin-login input[type="password"] {
-      width: 80%;
-      padding: 12px;
-      margin: 10px 0;
-      border-radius: 6px;
-      border: 1px solid #ccc;
-    }
-
-    .admin-login button {
-      padding: 10px 25px;
-      background-color: #007b5e;
-      color: white;
-      border: none;
-      border-radius: 6px;
-      font-weight: bold;
-      cursor: pointer;
-    }
-
-    .admin-login button:hover {
-      background-color: #005c47;
-    }
-
-    ul.service-list {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-around;
       text-align: left;
-      max-width: 600px;
-      margin: 0 auto;
+      padding: 40px 20px;
+      margin-top: 50px;
     }
 
-    ul.service-list li {
-      margin: 10px 0;
+    .footer div {
+      max-width: 250px;
+      margin-bottom: 20px;
+    }
+
+    .footer h4 {
+      margin-top: 0;
+      color: #86e2d5;
+    }
+
+    .footer p, .footer a {
+      color: white;
+      font-size: 0.9em;
+      text-decoration: none;
+    }
+
+    .footer a:hover {
+      text-decoration: underline;
     }
   </style>
 </head>
 <body>
 
-  <header>
-    <h1>ADEPR Church</h1>
-    <p>"Kubaka Itorero rifite Ijambo, Imbaraga n’Urukundo."</p>
-  </header>
+<header>
+  <h1>ADEPR Church Rwanda</h1>
+  <p>Urubuga Rwemewe rwa ADEPR</p>
+</header>
 
-  <nav>
-    <a href="#">Ahabanza</a>
-    <a href="#">Ibyerekeye</a>
-    <a href="#">Amakuru</a>
-    <a href="#">Gahunda</a>
-    <a href="#services">Serivisi</a>
-    <a href="#locations">Insengero</a>
-    <a href="#login">Kwinjira</a>
-    <a href="#contact">Twandikire</a>
-  </nav>
+<nav>
+  <a href="#about">Ibyerekeye ADEPR</a>
+  <a href="#services">Serivisi</a>
+  <a href="#education">Amashuri</a>
+  <a href="#health">Ubuvuzi</a>
+  <a href="#locations">Insengero</a>
+  <a href="#news">Amatangazo</a>
+  <a href="login.html">Injira</a>
+</nav>
 
-  <div class="hero">
-    <h1>Murakaza neza kuri ADEPR Church</h1>
-    <p>Turi itorero rifasha kubaka ubuzima bw'umwuka n'ubusabane mu Mana mu Rwanda hose.</p>
-    <a href="#services" class="btn">Reba Serivisi</a>
+<section class="hero">
+  <h1>Murakaza Neza</h1>
+  <p>Turi Itorero rya Pentekote mu Rwanda - ADEPR</p>
+</section>
+
+<section class="section" id="about">
+  <h2>Ibyerekeye ADEPR</h2>
+  <p>ADEPR ni itorero ryashinzwe mu 1940 rigamije kugeza ubutumwa bwiza bwa Yesu Kristo kubari mu Rwanda hose. Rifite abakristo basaga miliyoni 5 mu gihugu hose, rifite amashuri arenga 150, amavuriro 37 n’ibigo byinshi bifasha iterambere rusange.</p>
+  <p>Rikoresha uburyo bugezweho mu gutanga serivisi ku bakristo n’abayobozi barwo bagera mu nzego zose kuva ku rwego rw’itorero kugera ku rwego rw’igihugu.</p>
+</section>
+
+<section class="section" id="services">
+  <h2>Serivisi Zitangwa</h2>
+  <ul>
+    <li>Kwiyandikisha nk’umukristo mushya</li>
+    <li>Gusaba icyemezo cy’imyitwarire cyangwa ubunyamuryango</li>
+    <li>Gusaba transfert hagati y’insengero</li>
+    <li>Gusaba inkunga (mu rwego rw’itorero, paroisse cyangwa ururembo)</li>
+    <li>Gusaba gusengerwa / inama / amahugurwa</li>
+  </ul>
+  <p><a href="services.html">Kanda hano usabe serivisi</a></p>
+</section>
+
+<section class="section" id="education">
+  <h2>Amashuri ya ADEPR</h2>
+  <p>ADEPR ifite amashuri y'incuke, abanza, ayisumbuye ndetse na kaminuza. Amashuri yose akorera ku mahame y'uburezi bufite ireme n'indangagaciro z'iyobokamana. Amashuri ya ADEPR abarizwa mu ntara zose z'u Rwanda.</p>
+  <ul>
+    <li>Amashuri y'incuke: 48</li>
+    <li>Amashuri abanza: 57</li>
+    <li>Amashuri yisumbuye: 35</li>
+    <li>Kaminuza: Pentecostal University of Rwanda (PUR)</li>
+  </ul>
+</section>
+
+<section class="section" id="health">
+  <h2>Ibigo Nderabuzima n’Amavuriro</h2>
+  <p>Itorero ADEPR rifite uruhare rukomeye mu rwego rw’ubuzima binyuze mu mavuriro n’ibigo nderabuzima ritanga hirya no hino mu gihugu:</p>
+  <ul>
+    <li>Amavuriro yita ku barwayi: 12</li>
+    <li>Ibigo Nderabuzima: 25</li>
+    <li>Serivisi z'ubujyanama ku buzima bwo mu mutwe n’imibereho</li>
+  </ul>
+</section>
+
+<section class="section" id="locations">
+  <h2>Insengero Ziri Hafi Yawe</h2>
+  <p>Ushobora kureba insengero zose zemewe za ADEPR mu gihugu hose hakoreshejwe ikarita y’ubutaka. Serivisi izatuma umenya aho wasengera hafi yawe aho waba uri hose mu Rwanda.</p>
+  <p><a href="church-locator.html">Shakisha insengero</a></p>
+</section>
+
+<section class="section" id="news">
+  <h2>Amatangazo</h2>
+  <p>Amatangazo atangwa buri cyumweru cyangwa igihe cyose hakenewe kumenyesha abakristo ibyihutirwa bizajya bigaragara hano.</p>
+  <ul>
+    <li><strong>13 Nyakanga 2025:</strong> Inama y’abayobozi bose b’uturere izaba i Kigali - ADEPR HQ</li>
+    <li><strong>10 Nyakanga 2025:</strong> CEP za kaminuza zisabwe gutanga raporo y’amezi 3 ashize bitarenze 15/07</li>
+  </ul>
+</section>
+
+<div class="footer">
+  <div>
+    <h4>Itorero ADEPR</h4>
+    <p>Itorero ryubatse ku ijambo ry’Imana, rigamije kuzana impinduka nziza mu mibereho y’abantu bose.</p>
   </div>
-
-  <section>
-    <h2>Ibyerekeye ADEPR</h2>
-    <p>ADEPR (Association des Eglises de Pentecôte au Rwanda) ni Itorero rya Pentekote ryatangiriye mu Rwanda kuva mu 1940. Rifite insengero hirya no hino mu gihugu, amashuri, amavuriro n’imishinga y’iterambere. Intego ni ugutanga ubuzima bwiza bw’umwuka n’umubiri ku Banyarwanda bose.</p>
-    <ul>
-      <li><strong>Abakristo:</strong> Barenga miliyoni 2 mu gihugu hose</li>
-      <li><strong>Abari mu mijyi:</strong> Basaga 600,000</li>
-      <li><strong>Abari mu byaro:</strong> Barenga 1,400,000</li>
-      <li><strong>Amashuri:</strong> 316 (ayisumbuye, abanza n'incuke)</li>
-      <li><strong>Amavuriro:</strong> 21 (harimo ibigo nderabuzima n’amavuriro y'ibanze)</li>
-      <li><strong>Ishuri rikuru:</strong> Pentecostal University of Rwanda</li>
-      <li><strong>Abakozi b’itorero:</strong> Abapasitori n’abadiyakoni barenga 3,000</li>
-    </ul>
-  </section>
-
-  <section class="services" id="services">
-    <h2>Serivisi z’abakristo</h2>
-    <p>Umukristo wese ashobora gusaba izi serivisi binyuze kuri uru rubuga:</p>
-    <ul class="service-list">
-      <li>Gusaba icyemezo cy'imyitwarire (Recommendation letter)</li>
-      <li>Gusaba icyemezo cy'ubunyamuryango</li>
-      <li>Kwimukira ku rundi rusengero (gusaba transfert)</li>
-      <li>Gusaba gusengerwa cyangwa kuganirizwa n’abakozi b’Imana</li>
-      <li>Kwiyandikisha mu matsinda (korali, abasenzi, abajyanama...)</li>
-      <li>Gusaba inkunga mu bihe bikomeye</li>
-      <li>Kwiyandikisha nk’umukristo mushya</li>
-    </ul>
-  </section>
-
-  <section class="locations" id="locations">
-    <h2>Ahari insengero</h2>
-    <p>Kurikirana insengero za ADEPR ziri hirya no hino mu gihugu. Ushobora kureba izikwegereye uhereye aho uri:</p>
-    <p><a href="#">Reba insengero ziri hafi yawe &raquo;</a></p>
-  </section>
-
-  <section id="login" class="admin-login">
-    <h2>Kwinjira kw’Abayobozi</h2>
-    <p>Aba CEP bakorera muri kaminuza, abayobozi b’amatorero, n’abayobozi bakuru ba ADEPR bose binjira hano bagatanga raporo cyangwa bakayakira.</p>
-    <form action="#" method="post">
-      <input type="text" placeholder="Izina ry'umuyobozi" required><br>
-      <input type="password" placeholder="Ijambobanga" required><br>
-      <button type="submit">Injira</button>
-    </form>
-  </section>
-
-  <section id="contact">
-    <h2>Twandikire</h2>
-    <p>Email: <a href="mailto:info@adeprchurch.rw">info@adeprchurch.rw</a></p>
-    <p>Telefone: +250 788 000 000</p>
-    <p>Aderesi: Kigali - Rwanda</p>
-  </section>
-
-  <footer>
-    <p>&copy; 2025 ADEPR Church</p>
-    <p>“Kubaka Itorero rifite Ijambo, Imbaraga n’Urukundo”</p>
-    <p>Design by Mugisha Emmanuel</p>
-  </footer>
+  <div>
+    <h4>Amakuru Yihariye</h4>
+    <p><a href="#about">Ibyerekeye ADEPR</a></p>
+    <p><a href="#services">Serivisi</a></p>
+    <p><a href="#locations">Insengero</a></p>
+  </div>
+  <div>
+    <h4>Twandikire</h4>
+    <p>Hamagara: +250 788 123 456</p>
+    <p>Email: <a href="mailto:info@adepr.rw">info@adepr.rw</a></p>
+    <p>Aderesi: ADEPR HQ, Kigali, Rwanda</p>
+  </div>
+  <div>
+    <h4>© 2025 ADEPR Church Rwanda</h4>
+    <p>All rights reserved.</p>
+  </div>
+</div>
 
 </body>
 </html>
