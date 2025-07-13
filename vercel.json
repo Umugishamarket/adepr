@@ -2,14 +2,59 @@
   "version": 2,
   "builds": [
     {
-      "src": "*.html",
+      "src": "index.html",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "admin-dashboard.html",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "admin-setting.html",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "announcements.html",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "cep-dashboard.html",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "church-map.html",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "dashboard.html",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "leaders.html",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "login.html",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "profile.html",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "register.html",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "services.html",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "user-management.html",
       "use": "@vercel/static"
     }
   ],
   "routes": [
-    {
-      "src": "/(.*)",
-      "dest": "/index.html"
-    }
+    { "src": "/(.*)", "dest": "/index.html" }
   ]
 }
