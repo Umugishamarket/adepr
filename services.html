@@ -87,7 +87,7 @@
 
 <section class="section">
   <h2>Uzuza Formu yo Gusaba Serivisi</h2>
-  <form action="#" method="post">
+  <form id="serviceForm" action="#">
     <label for="names">Amazina Yuzuye:</label>
     <input type="text" id="names" name="names" required />
 
@@ -143,7 +143,26 @@
   </form>
 </section>
 
+<!-- Firebase Scripts -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+
 <script>
+  const firebaseConfig = {
+    apiKey: "AIzaSyCxKjaqkSEsFY9fk5Y_XcN3viSQLX5S2Kw",
+    authDomain: "adepr-system.firebaseapp.com",
+    projectId: "adepr-system",
+    storageBucket: "adepr-system.firebasestorage.app",
+    messagingSenderId: "370773084410",
+    appId: "1:370773084410:web:e89dfd42c6fecdc5222143",
+    measurementId: "G-J2ZGZ1EF54"
+  };
+
+  // Initialize Firebase
+  firebase.initializeApp(firebaseConfig);
+  const db = firebase.firestore();
+
+  // Region to District mapping
   const regionDistrictMap = {
     kigali: ["Gasabo", "Kicukiro", "Nyarugenge"],
     northern: ["Musanze", "Burera", "Gicumbi"],
@@ -152,6 +171,7 @@
     eastern: ["Nyagatare", "Kayonza", "Ngoma"]
   };
 
+  // District to Church mapping
   const districtChurchMap = {
     Gasabo: ["ADEPR Kimisagara", "ADEPR Remera"],
     Kicukiro: ["ADEPR Kicukiro", "ADEPR Kanombe"],
@@ -174,6 +194,7 @@
   const districtSelect = document.getElementById("district");
   const churchSelect = document.getElementById("church");
 
+  // Change district options when region changes
   regionSelect.addEventListener("change", () => {
     const districts = regionDistrictMap[regionSelect.value] || [];
     districtSelect.innerHTML = '<option value="">-- Hitamo Akarere --</option>';
@@ -187,6 +208,7 @@
     churchSelect.innerHTML = '<option value="">-- Hitamo Itorero --</option>';
   });
 
+  // Change church options when district changes
   districtSelect.addEventListener("change", () => {
     const churches = districtChurchMap[districtSelect.value] || [];
     churchSelect.innerHTML = '<option value="">-- Hitamo Itorero --</option>';
@@ -196,6 +218,36 @@
       option.textContent = church;
       churchSelect.appendChild(option);
     });
+  });
+
+  // Submit form data to Firebase Firestore
+  const form = document.getElementById("serviceForm");
+  form.addEventListener("submit", (e) => {
+    e.preventDefault();
+
+    const data = {
+      names: form.names.value,
+      phone: form.phone.value,
+      email: form.email.value,
+      region: form.region.value,
+      district: form.district.value,
+      church: form.church.value,
+      level: form.level.value,
+      service: form.service.value,
+      message: form.message.value,
+      timestamp: firebase.firestore.FieldValue.serverTimestamp()
+    };
+
+    db.collection("service_requests").add(data)
+      .then(() => {
+        alert("Serivisi yawe yasabwe neza! Tuzagusubiza vuba.");
+        form.reset();
+        // Ushobora no kujya ku rundi rupapuro cyangwa ukongeraho redirect hano
+      })
+      .catch((error) => {
+        console.error("Habaye ikibazo: ", error);
+        alert("Habaye ikibazo cyo kohereza serivisi. Ongera ugerageze.");
+      });
   });
 </script>
 
