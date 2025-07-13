@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="rw">
+<head>
+  <meta charset="UTF-8" />
+  <title>CEP Dashboard</title>
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+    import {
+      getFirestore,
+      collection,
+      addDoc,
+      getDocs,
+      query,
+      where,
+      orderBy,
+      serverTimestamp
+    } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+    import {
+      getAuth,
+      onAuthStateChanged,
+      signOut
+    } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyCxKjaqkSEsFY9fk5Y_XcN3viSQLX5S2Kw",
+      authDomain: "adepr-system.firebaseapp.com",
+      projectId: "adepr-system",
+      storageBucket: "adepr-system.appspot.com",
+      messagingSenderId: "370773084410",
+      appId: "1:370773084410:web:e89dfd42c6fecdc5222143",
+      measurementId: "G-J2ZGZ1EF54"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    const auth = getAuth(app);
+
+    let currentUser;
+
+    onAuthStateChanged(auth, (user) => {
+      if (!user) return (window.location.href = "login.html");
+      currentUser = user;
+      loadReports();
+    });
+
+    async function submitReport() {
+      const title = document.getElementById("reportTitle").value;
+      const content = document.getElementById("reportContent").value;
+
+      if (!title || !content) return alert("Injiza ibisobanuro byose!");
+
+      await addDoc(collection(db, "cep_reports"), {
+        userId: currentUser.uid,
+        title,
+        content,
+        createdAt: serverTimestamp()
+      });
+
+      alert("Raporo yoherejwe!");
+      document.getElementById("reportTitle").value = "";
+      document.getElementById("reportContent").value = "";
+      loadReports();
+    }
+
+    async function loadReports() {
+      const q = query(
+        collection(db, "cep_reports"),
+        where("userId", "==", currentUser.uid),
+        orderBy("createdAt", "desc")
+      );
+      const snapshot = await getDocs(q);
+      const list = document.getElementById("reportList");
+      list.innerHTML = "";
+
+      snapshot.forEach((doc) => {
+        const data = doc.data();
+        const li = document.createElement("li");
+        const date = data.createdAt?.toDate().toLocaleString() || "Itariki itazwi";
+
+        li.innerHTML = `
+          <strong>${data.title}</strong><br>
+          <em>${date}</em>
+          <p>${data.content}</p>
+        `;
+        list.appendChild(li);
+      });
+
+      if (snapshot.empty) list.innerHTML = "<li>Nta raporo irabikwa.</li>";
+    }
+
+    window.logout = async function () {
+      await signOut(auth);
+      window.location.href = "login.html";
+    };
+  </script>
+
+  <style>
+    body {
+      font-family: "Segoe UI", sans-serif;
+      background: #f6fffa;
+      padding: 30px;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: auto;
+      background: white;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 0 8px rgba(0,0,0,0.1);
+    }
+
+    h2 {
+      text-align: center;
+      color: #007b5e;
+      margin-bottom: 20px;
+    }
+
+    input, textarea {
+      width: 100%;
+      padding: 10px;
+      margin-top: 10px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+    }
+
+    button {
+      margin-top: 15px;
+      background-color: #007b5e;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #005c47;
+    }
+
+    ul {
+      list-style: none;
+      margin-top: 30px;
+      padding: 0;
+    }
+
+    li {
+      background: #ecf9f3;
+      margin-bottom: 15px;
+      padding: 15px;
+      border-radius: 8px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>CEP Dashboard - Raporo</h2>
+
+    <input type="text" id="reportTitle" placeholder="Umutwe wa Raporo" />
+    <textarea id="reportContent" rows="5" placeholder="Andika ibyaranze ibikorwa..."></textarea>
+    <button onclick="submitReport()">Ohereza Raporo</button>
+
+    <h3>Raporo Zanjye</h3>
+    <ul id="reportList">
+      <li>Turimo kugaragaza raporo...</li>
+    </ul>
+
+    <button onclick="logout()">Sohoka</button>
+  </div>
+</body>
+</html>

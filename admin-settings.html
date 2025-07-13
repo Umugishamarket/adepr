@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="rw">
+<head>
+  <meta charset="UTF-8" />
+  <title>Admin Settings - ADEPR</title>
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+    import {
+      getFirestore,
+      collection,
+      addDoc,
+      getDocs,
+      deleteDoc,
+      doc
+    } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyCxKjaqkSEsFY9fk5Y_XcN3viSQLX5S2Kw",
+      authDomain: "adepr-system.firebaseapp.com",
+      projectId: "adepr-system",
+      storageBucket: "adepr-system.appspot.com",
+      messagingSenderId: "370773084410",
+      appId: "1:370773084410:web:e89dfd42c6fecdc5222143",
+      measurementId: "G-J2ZGZ1EF54"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    async function addChurch() {
+      const name = document.getElementById("churchName").value;
+      const district = document.getElementById("churchDistrict").value;
+      const lat = parseFloat(document.getElementById("churchLat").value);
+      const lng = parseFloat(document.getElementById("churchLng").value);
+
+      if (!name || !district || isNaN(lat) || isNaN(lng)) {
+        alert("Shyiramo amakuru yose.");
+        return;
+      }
+
+      await addDoc(collection(db, "churches"), {
+        name,
+        district,
+        lat,
+        lng
+      });
+
+      alert("Itorero ryashyizweho!");
+      loadChurches();
+    }
+
+    async function loadChurches() {
+      const snapshot = await getDocs(collection(db, "churches"));
+      const list = document.getElementById("churchList");
+      list.innerHTML = "";
+
+      snapshot.forEach(docSnap => {
+        const d = docSnap.data();
+        const li = document.createElement("li");
+        li.innerHTML = `
+          <strong>${d.name}</strong> (${d.district})
+          <button onclick="deleteChurch('${docSnap.id}')">Siba</button>
+        `;
+        list.appendChild(li);
+      });
+    }
+
+    window.deleteChurch = async function (id) {
+      if (confirm("Urashaka gusiba iri torero?")) {
+        await deleteDoc(doc(db, "churches", id));
+        loadChurches();
+      }
+    };
+
+    loadChurches();
+  </script>
+
+  <style>
+    body {
+      font-family: sans-serif;
+      background-color: #f0f8f4;
+      padding: 30px;
+    }
+
+    .container {
+      max-width: 800px;
+      background: white;
+      padding: 30px;
+      margin: auto;
+      border-radius: 12px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    h2 {
+      color: #007b5e;
+      margin-bottom: 20px;
+    }
+
+    input {
+      padding: 10px;
+      width: 100%;
+      margin-bottom: 10px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+    }
+
+    button {
+      background-color: #007b5e;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+
+    button:hover {
+      background-color: #005c47;
+    }
+
+    ul {
+      margin-top: 30px;
+      padding: 0;
+      list-style: none;
+    }
+
+    li {
+      padding: 12px;
+      background: #f4faf8;
+      border-radius: 8px;
+      margin-bottom: 10px;
+    }
+
+    li button {
+      float: right;
+      background-color: #e74c3c;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Gucunga Insengero (Churches)</h2>
+
+    <input type="text" id="churchName" placeholder="Izina ry'itorero" />
+    <input type="text" id="churchDistrict" placeholder="Akarere" />
+    <input type="text" id="churchLat" placeholder="Latitude" />
+    <input type="text" id="churchLng" placeholder="Longitude" />
+    <button onclick="addChurch()">Shyiraho Itorero</button>
+
+    <ul id="churchList">
+      <li>Turimo kubigaragaza...</li>
+    </ul>
+  </div>
+</body>
+</html>

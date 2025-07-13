@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="rw">
+<head>
+  <meta charset="UTF-8">
+  <title>Abayobozi - ADEPR</title>
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+    import {
+      getFirestore,
+      collection,
+      addDoc,
+      getDocs,
+      deleteDoc,
+      doc
+    } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyCxKjaqkSEsFY9fk5Y_XcN3viSQLX5S2Kw",
+      authDomain: "adepr-system.firebaseapp.com",
+      projectId: "adepr-system",
+      storageBucket: "adepr-system.appspot.com",
+      messagingSenderId: "370773084410",
+      appId: "1:370773084410:web:e89dfd42c6fecdc5222143",
+      measurementId: "G-J2ZGZ1EF54"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    async function addLeader() {
+      const name = document.getElementById("name").value;
+      const phone = document.getElementById("phone").value;
+      const level = document.getElementById("level").value;
+      const location = document.getElementById("location").value;
+      const role = document.getElementById("role").value;
+
+      if (!name || !phone || !level || !location || !role) {
+        return alert("Shyiramo amakuru yose.");
+      }
+
+      await addDoc(collection(db, "leaders"), {
+        name,
+        phone,
+        level,
+        location,
+        role
+      });
+
+      alert("Umuyobozi yashyizweho!");
+      loadLeaders();
+    }
+
+    async function loadLeaders() {
+      const snapshot = await getDocs(collection(db, "leaders"));
+      const list = document.getElementById("leaderList");
+      list.innerHTML = "";
+
+      snapshot.forEach(docSnap => {
+        const d = docSnap.data();
+        const li = document.createElement("li");
+        li.innerHTML = `
+          <strong>${d.name}</strong> - ${d.role}<br>
+          <em>${d.level} | ${d.location}</em><br>
+          Tel: ${d.phone}
+          <button onclick="deleteLeader('${docSnap.id}')">Siba</button>
+        `;
+        list.appendChild(li);
+      });
+    }
+
+    window.deleteLeader = async function (id) {
+      if (confirm("Urashaka gusiba uyu muyobozi?")) {
+        await deleteDoc(doc(db, "leaders", id));
+        loadLeaders();
+      }
+    };
+
+    loadLeaders();
+  </script>
+
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #f9fdfc;
+      padding: 30px;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: auto;
+      background: white;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 0 8px rgba(0,0,0,0.1);
+    }
+
+    h2 {
+      color: #007b5e;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 10px;
+      margin-top: 10px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+    }
+
+    button {
+      background-color: #007b5e;
+      color: white;
+      padding: 10px 20px;
+      margin-top: 15px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    ul {
+      list-style: none;
+      margin-top: 30px;
+      padding: 0;
+    }
+
+    li {
+      background: #eef9f5;
+      padding: 15px;
+      border-radius: 8px;
+      margin-bottom: 12px;
+    }
+
+    button:hover {
+      background-color: #005c47;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Gucunga Abayobozi</h2>
+
+    <input id="name" placeholder="Izina ry'umuyobozi" />
+    <input id="phone" placeholder="Telefone" />
+    <select id="level">
+      <option value="">-- Urwego --</option>
+      <option value="cep">CEP / Kaminuza</option>
+      <option value="local">Itorero</option>
+      <option value="parish">Paroisse</option>
+      <option value="region">Ururembo</option>
+      <option value="head">Ibiro Bikuru</option>
+    </select>
+    <input id="location" placeholder="Aho akorera (ex: UNILAK, Rwamagana...)" />
+    <input id="role" placeholder="Inshingano (ex: President CEP)" />
+    <button onclick="addLeader()">Shyiraho Umuyobozi</button>
+
+    <ul id="leaderList">
+      <li>Turimo kugaragaza abayobozi...</li>
+    </ul>
+  </div>
+</body>
+</html>

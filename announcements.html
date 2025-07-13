@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="rw">
+<head>
+  <meta charset="UTF-8">
+  <title>Amatangazo ya ADEPR</title>
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+    import {
+      getFirestore,
+      collection,
+      getDocs,
+      query,
+      orderBy
+    } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyCxKjaqkSEsFY9fk5Y_XcN3viSQLX5S2Kw",
+      authDomain: "adepr-system.firebaseapp.com",
+      projectId: "adepr-system",
+      storageBucket: "adepr-system.appspot.com",
+      messagingSenderId: "370773084410",
+      appId: "1:370773084410:web:e89dfd42c6fecdc5222143",
+      measurementId: "G-J2ZGZ1EF54"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    async function loadAnnouncements() {
+      const q = query(collection(db, "announcements"), orderBy("timestamp", "desc"));
+      const snapshot = await getDocs(q);
+      const list = document.getElementById("announcementList");
+
+      if (snapshot.empty) {
+        list.innerHTML = "<li>Nta tangazo riraboneka kugeza ubu.</li>";
+        return;
+      }
+
+      snapshot.forEach(doc => {
+        const data = doc.data();
+        const li = document.createElement("li");
+        li.innerHTML = `
+          <h3>${data.title}</h3>
+          <p>${data.body}</p>
+          <small><em>Yatanzwe na: ${data.level.toUpperCase()}</em> | <span>${new Date(data.timestamp.toDate()).toLocaleString()}</span></small>
+        `;
+        list.appendChild(li);
+      });
+    }
+
+    loadAnnouncements();
+  </script>
+
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f5fbf9;
+      padding: 30px;
+    }
+
+    h2 {
+      text-align: center;
+      color: #007b5e;
+      margin-bottom: 30px;
+    }
+
+    ul {
+      list-style: none;
+      padding: 0;
+      max-width: 800px;
+      margin: auto;
+    }
+
+    li {
+      background: #ffffff;
+      padding: 20px;
+      margin-bottom: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.05);
+    }
+
+    li h3 {
+      color: #005c47;
+      margin-bottom: 10px;
+    }
+
+    li p {
+      font-size: 16px;
+      color: #444;
+    }
+
+    li small {
+      display: block;
+      margin-top: 10px;
+      color: #888;
+    }
+  </style>
+</head>
+<body>
+  <h2>Amatangazo yaturutse mu buyobozi bwa ADEPR</h2>
+  <ul id="announcementList">
+    <li>Turimo kugaragaza amatangazo...</li>
+  </ul>
+</body>
+</html>

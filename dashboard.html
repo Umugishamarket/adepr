@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="rw">
+<head>
+  <meta charset="UTF-8">
+  <title>Dashboard - Umukristo</title>
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+    import { getFirestore, doc, getDoc, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyCxKjaqkSEsFY9fk5Y_XcN3viSQLX5S2Kw",
+      authDomain: "adepr-system.firebaseapp.com",
+      projectId: "adepr-system",
+      storageBucket: "adepr-system.appspot.com",
+      messagingSenderId: "370773084410",
+      appId: "1:370773084410:web:e89dfd42c6fecdc5222143",
+      measurementId: "G-J2ZGZ1EF54"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    onAuthStateChanged(auth, async (user) => {
+      if (!user) {
+        window.location.href = "login.html";
+        return;
+      }
+
+      // Tugaragaze izina n’amakuru ye
+      const userDoc = await getDoc(doc(db, "users", user.uid));
+      if (userDoc.exists()) {
+        const data = userDoc.data();
+        document.getElementById("welcome").textContent = `Murakaza neza ${data.name}`;
+        document.getElementById("email").textContent = data.email;
+        document.getElementById("church").textContent = data.church;
+        document.getElementById("location").textContent = data.location;
+      }
+
+      // Tugaragaze services yasabye
+      const q = query(collection(db, "service_requests"), where("uid", "==", user.uid));
+      const querySnapshot = await getDocs(q);
+      let servicesList = "";
+      querySnapshot.forEach((doc) => {
+        const s = doc.data();
+        servicesList += `<li><strong>${s.service}</strong> - ${s.status || 'Pending'} </li>`;
+      });
+
+      document.getElementById("services").innerHTML = servicesList || "<li>Nta serivisi wasabye.</li>";
+    });
+
+    window.logoutUser = async function () {
+      await signOut(auth);
+      window.location.href = "login.html";
+    };
+  </script>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f3f9f7;
+      padding: 30px;
+    }
+
+    .container {
+      background: white;
+      padding: 25px;
+      border-radius: 12px;
+      max-width: 700px;
+      margin: auto;
+      box-shadow: 0 0 12px rgba(0,0,0,0.1);
+    }
+
+    h2 {
+      color: #007b5e;
+    }
+
+    .info p {
+      margin: 5px 0;
+    }
+
+    ul {
+      list-style-type: none;
+      padding-left: 0;
+    }
+
+    li {
+      background: #e9f7f2;
+      padding: 10px;
+      margin-bottom: 8px;
+      border-left: 5px solid #007b5e;
+    }
+
+    button {
+      margin-top: 20px;
+      background: #d9534f;
+      color: white;
+      border: none;
+      padding: 12px 20px;
+      font-size: 16px;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #c9302c;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2 id="welcome">Murakaza neza</h2>
+
+    <div class="info">
+      <p><strong>Email:</strong> <span id="email"></span></p>
+      <p><strong>Itorero:</strong> <span id="church"></span></p>
+      <p><strong>Akarere/Umujyi:</strong> <span id="location"></span></p>
+    </div>
+
+    <h3>Amaserivisi Wasabye:</h3>
+    <ul id="services">
+      <li>Turimo kubigaragaza...</li>
+    </ul>
+
+    <button onclick="logoutUser()">Sohoka</button>
+  </div>
+</body>
+</html>

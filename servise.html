@@ -1,0 +1,136 @@
+<!-- Service Request Form -->
+<style>
+  .service-form {
+    background: linear-gradient(to bottom, #e6f7f2, #ffffff);
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    padding: 40px 30px;
+    max-width: 700px;
+    margin: 60px auto;
+    font-family: 'Segoe UI', sans-serif;
+  }
+
+  .service-form h2 {
+    text-align: center;
+    color: #005c47;
+    margin-bottom: 30px;
+    font-size: 28px;
+  }
+
+  .service-form label {
+    display: block;
+    margin-top: 15px;
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: #333;
+  }
+
+  .service-form input,
+  .service-form select,
+  .service-form textarea {
+    width: 100%;
+    padding: 12px;
+    border-radius: 10px;
+    border: 1px solid #ccc;
+    font-size: 16px;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05);
+  }
+
+  .service-form textarea {
+    resize: vertical;
+  }
+
+  .service-form button {
+    background-color: #007b5e;
+    color: white;
+    border: none;
+    padding: 14px 28px;
+    margin-top: 25px;
+    font-size: 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    width: 100%;
+    transition: background-color 0.3s ease;
+  }
+
+  .service-form button:hover {
+    background-color: #005c47;
+  }
+</style>
+
+<section class="service-form" id="request-service">
+  <h2>Saba Serivisi</h2>
+  <form action="#" method="post">
+    <label for="name">Izina ry’umukristo:</label>
+    <input type="text" id="name" name="name" required>
+
+    <label for="email">Email / Telefoni:</label>
+    <input type="text" id="email" name="email" required>
+
+    <label for="church">Itorero usengeraho:</label>
+    <input type="text" id="church" name="church" required>
+
+    <label for="location">Akarere/Umujyi:</label>
+    <input type="text" id="location" name="location" required>
+
+    <label for="level">Urwego serivisi ijyaho:</label>
+    <select id="level" name="level" required onchange="updateServices()">
+      <option value="">-- Hitamo --</option>
+      <option value="local">Ku rwego rw’itorero (Local Church)</option>
+      <option value="parish">Ku rwego rwa Paroise</option>
+      <option value="region">Ku rwego rw’Ururembo</option>
+      <option value="head">Ibiro bikuru bya ADEPR</option>
+    </select>
+
+    <label for="service">Serivisi usaba:</label>
+    <select id="service" name="service" required>
+      <option value="">-- Hitamo urwego hejuru mbere --</option>
+    </select>
+
+    <label for="details">Ibisobanuro byisumbuye:</label>
+    <textarea id="details" name="details" rows="4"></textarea>
+
+    <button type="submit">Ohereza Serivisi</button>
+  </form>
+</section>
+
+<script>
+function updateServices() {
+  const serviceSelect = document.getElementById("service");
+  const level = document.getElementById("level").value;
+
+  const options = {
+    local: [
+      { value: "recommendation", text: "Icyemezo cy'imyitwarire" },
+      { value: "membership", text: "Icyemezo cy’ubunyamuryango" },
+      { value: "prayer", text: "Gusaba gusengerwa / kuganirizwa" },
+      { value: "join-group", text: "Kwiyandikisha mu itsinda" },
+      { value: "new-christian", text: "Kwiyandikisha nk’umukristo mushya" }
+    ],
+    parish: [
+      { value: "transfer", text: "Gusaba transfert y’itorero" },
+      { value: "support", text: "Gusaba inkunga ya paroisse" }
+    ],
+    region: [
+      { value: "training", text: "Gusaba amahugurwa y'abayobozi" },
+      { value: "project-support", text: "Inkunga ku mishinga y’itorero" }
+    ],
+    head: [
+      { value: "pastor-appointment", text: "Gusaba guhabwa umushumba wemewe" },
+      { value: "high-support", text: "Gusaba inkunga yihariye ku rwego rw’igihugu" },
+      { value: "national-transfer", text: "Gusaba transfert y’igihugu" }
+    ]
+  };
+
+  serviceSelect.innerHTML = '<option value="">-- Hitamo --</option>';
+
+  if (options[level]) {
+    options[level].forEach(option => {
+      const opt = document.createElement("option");
+      opt.value = option.value;
+      opt.textContent = option.text;
+      serviceSelect.appendChild(opt);
+    });
+  }
+}
+</script>

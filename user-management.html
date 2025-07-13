@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="rw">
+<head>
+  <meta charset="UTF-8">
+  <title>User Management - ADEPR</title>
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+    import {
+      getAuth,
+      onAuthStateChanged,
+      signOut
+    } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+    import {
+      getFirestore,
+      collection,
+      getDocs,
+      doc,
+      updateDoc
+    } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyCxKjaqkSEsFY9fk5Y_XcN3viSQLX5S2Kw",
+      authDomain: "adepr-system.firebaseapp.com",
+      projectId: "adepr-system",
+      storageBucket: "adepr-system.appspot.com",
+      messagingSenderId: "370773084410",
+      appId: "1:370773084410:web:e89dfd42c6fecdc5222143",
+      measurementId: "G-J2ZGZ1EF54"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    onAuthStateChanged(auth, async (user) => {
+      if (!user) {
+        window.location.href = "login.html";
+        return;
+      }
+
+      // Check if user is admin
+      const userDoc = await getDocs(collection(db, "users"));
+      const currentUser = userDoc.docs.find(doc => doc.id === user.uid);
+
+      if (!currentUser || currentUser.data().role !== "admin") {
+        alert("Ntiwemerewe kwinjira hano.");
+        window.location.href = "dashboard.html";
+        return;
+      }
+
+      loadUsers();
+    });
+
+    async function loadUsers() {
+      const snapshot = await getDocs(collection(db, "users"));
+      const list = document.getElementById("userList");
+      list.innerHTML = "";
+
+      snapshot.forEach((docSnap) => {
+        const data = docSnap.data();
+        const li = document.createElement("li");
+
+        li.innerHTML = `
+          <strong>${data.name}</strong> (${data.email})<br>
+          <label>Role: 
+            <select onchange="updateRole('${docSnap.id}', this.value)">
+              <option value="christian" ${data.role === "christian" ? "selected" : ""}>Christian</option>
+              <option value="leader" ${data.role === "leader" ? "selected" : ""}>Leader</option>
+              <option value="admin" ${data.role === "admin" ? "selected" : ""}>Admin</option>
+            </select>
+          </label>
+          <label>Level: 
+            <select onchange="updateLevel('${docSnap.id}', this.value)">
+              <option value="">--Hitamo--</option>
+              <option value="local" ${data.level === "local" ? "selected" : ""}>Itorero</option>
+              <option value="parish" ${data.level === "parish" ? "selected" : ""}>Paroise</option>
+              <option value="region" ${data.level === "region" ? "selected" : ""}>Ururembo</option>
+              <option value="head" ${data.level === "head" ? "selected" : ""}>Ibiro Bikuru</option>
+            </select>
+          </label>
+        `;
+
+        li.style.background = "#f1f8f6";
+        li.style.marginBottom = "15px";
+        li.style.padding = "15px";
+        li.style.borderRadius = "8px";
+        list.appendChild(li);
+      });
+    }
+
+    window.updateRole = async function (userId, role) {
+      await updateDoc(doc(db, "users", userId), {
+        role: role
+      });
+      alert("Role yahinduwe!");
+    };
+
+    window.updateLevel = async function (userId, level) {
+      await updateDoc(doc(db, "users", userId), {
+        level: level
+      });
+      alert("Level yahinduwe!");
+    };
+
+    window.logout = async function () {
+      await signOut(auth);
+      window.location.href = "login.html";
+    };
+  </script>
+
+  <style>
+    body {
+      font-family: sans-serif;
+      background-color: #eefaf6;
+      padding: 30px;
+    }
+
+    .container {
+      max-width: 800px;
+      background: white;
+      padding: 30px;
+      margin: auto;
+      border-radius: 12px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    h2 {
+      color: #007b5e;
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    li {
+      list-style: none;
+    }
+
+    label {
+      display: block;
+      margin-top: 10px;
+    }
+
+    select {
+      padding: 6px;
+      border-radius: 6px;
+      margin-left: 10px;
+    }
+
+    .logout-btn {
+      margin-top: 20px;
+      background: #d9534f;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 6px;
+    }
+
+    .logout-btn:hover {
+      background-color: #c9302c;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Gucunga Abakoresha (User Management)</h2>
+    <ul id="userList">
+      <li>Turimo kugaragaza urutonde...</li>
+    </ul>
+
+    <button class="logout-btn" onclick="logout()">Sohoka</button>
+  </div>
+</body>
+</html>

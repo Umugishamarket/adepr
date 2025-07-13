@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="rw">
+<head>
+  <meta charset="UTF-8">
+  <title>ADEPR Admin Dashboard</title>
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+    import {
+      getAuth,
+      onAuthStateChanged,
+      signOut
+    } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+    import {
+      getFirestore,
+      collection,
+      getDocs,
+      doc,
+      getDoc,
+      query,
+      where,
+      updateDoc,
+      addDoc,
+      serverTimestamp
+    } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyCxKjaqkSEsFY9fk5Y_XcN3viSQLX5S2Kw",
+      authDomain: "adepr-system.firebaseapp.com",
+      projectId: "adepr-system",
+      storageBucket: "adepr-system.appspot.com",
+      messagingSenderId: "370773084410",
+      appId: "1:370773084410:web:e89dfd42c6fecdc5222143",
+      measurementId: "G-J2ZGZ1EF54"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    let adminLevel = "";
+
+    onAuthStateChanged(auth, async (user) => {
+      if (!user) {
+        window.location.href = "login.html";
+        return;
+      }
+
+      const userDoc = await getDoc(doc(db, "users", user.uid));
+      if (!userDoc.exists()) {
+        alert("Ntitwabashije kubona amakuru yawe.");
+        return;
+      }
+
+      const userData = userDoc.data();
+      if (userData.role !== "admin" && userData.role !== "leader") {
+        alert("Nta burenganzira ufite bwo kwinjira hano.");
+        window.location.href = "dashboard.html";
+        return;
+      }
+
+      adminLevel = userData.level || "local";
+      document.getElementById("adminName").textContent = userData.name;
+
+      loadRequests();
+    });
+
+    async function loadRequests() {
+      const q = query(collection(db, "service_requests"), where("level", "==", adminLevel));
+      const snapshot = await getDocs(q);
+      const list = document.getElementById("requests");
+      list.innerHTML = "";
+
+      snapshot.forEach((docSnap) => {
+        const d = docSnap.data();
+        const li = document.createElement("li");
+
+        li.innerHTML = `
+          <strong>${d.name}</strong> - ${d.service}<br>
+          <small>${d.email} | ${d.church} | ${d.location}</small><br>
+          <em>Status: ${d.status || "Pending"}</em><br>
+          <button onclick="updateStatus('${docSnap.id}', 'approved')">Emeza</button>
+          <button onclick="updateStatus('${docSnap.id}', 'rejected')">Hakana</button>
+        `;
+
+        li.style.borderLeft = "5px solid #007b5e";
+        li.style.marginBottom = "15px";
+        li.style.padding = "10px";
+        li.style.backgroundColor = "#f1f9f6";
+        list.appendChild(li);
+      });
+
+      if (snapshot.empty) {
+        list.innerHTML = "<li>Nta maserivisi yasabwe kuri uru rwego.</li>";
+      }
+    }
+
+    window.updateStatus = async function (id, newStatus) {
+      await updateDoc(doc(db, "service_requests", id), {
+        status: newStatus
+      });
+      alert("Status yahinduwe!");
+      loadRequests();
+    };
+
+    window.logout = async function () {
+      await signOut(auth);
+      window.location.href = "login.html";
+    };
+
+    window.addAnnouncement = async function (event) {
+      event.preventDefault();
+      const title = document.getElementById("title").value;
+      const content = document.getElementById("content").value;
+
+      try {
+        await addDoc(collection(db, "announcements"), {
+          title,
+          content,
+          createdAt: serverTimestamp()
+        });
+
+        alert("Itangazo ryoherejwe neza!");
+        document.getElementById("title").value = "";
+        document.getElementById("content").value = "";
+      } catch (err) {
+        alert("Habaye ikibazo: " + err.message);
+      }
+    };
+  </script>
+
+  <style>
+    body {
+      font-family: sans-serif;
+      background-color: #f3f9f7;
+      padding: 30px;
+    }
+
+    .container {
+      max-width: 800px;
+      background-color: white;
+      padding: 25px;
+      border-radius: 12px;
+      margin: auto;
+      box-shadow: 0 0 12px rgba(0,0,0,0.1);
+    }
+
+    h2 {
+      color: #007b5e;
+    }
+
+    li {
+      list-style: none;
+      margin-bottom: 15px;
+      padding: 15px;
+      background: #e8f6f2;
+      border-radius: 8px;
+    }
+
+    button {
+      margin-top: 10px;
+      margin-right: 10px;
+      padding: 8px 16px;
+      background: #007b5e;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #005c47;
+    }
+
+    .logout-btn {
+      background-color: #d9534f;
+      float: right;
+    }
+
+    .logout-btn:hover {
+      background-color: #c9302c;
+    }
+
+    form {
+      margin-top: 30px;
+    }
+
+    input, textarea {
+      width: 100%;
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      margin-bottom: 15px;
+      font-size: 15px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Dashboard y’Umuyobozi</h2>
+    <p>Muraho <strong id="adminName">Umuyobozi</strong></p>
+
+    <h3>Amaserivisi yasabwe kuri uru rwego:</h3>
+    <ul id="requests">
+      <li>Turimo kubigaragaza...</li>
+    </ul>
+
+    <hr>
+    <h3>Ongeraho Itangazo Rishya</h3>
+    <form onsubmit="addAnnouncement(event)">
+      <label for="title">Umutwe w’itangazo:</label>
+      <input type="text" id="title" required>
+
+      <label for="content">Ibisobanuro:</label>
+      <textarea id="content" rows="4" required></textarea>
+
+      <button type="submit">Ohereza Itangazo</button>
+    </form>
+
+    <button class="logout-btn" onclick="logout()">Sohoka</button>
+  </div>
+</body>
+</html>

@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="rw">
+<head>
+  <meta charset="UTF-8">
+  <title>Ikarita y'Insengero - ADEPR</title>
+  <style>
+    #map {
+      height: 80vh;
+      width: 100%;
+      border-radius: 10px;
+      box-shadow: 0 0 12px rgba(0,0,0,0.2);
+    }
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #f4fbf9;
+      padding: 20px;
+    }
+    h2 {
+      text-align: center;
+      color: #007b5e;
+      margin-bottom: 20px;
+    }
+  </style>
+</head>
+<body>
+  <h2>Reba Insengero za ADEPR Hegereye Wowe</h2>
+  <div id="map">Turimo kuyishyira kuri karita...</div>
+
+  <!-- Load Firebase + Map -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+    import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyCxKjaqkSEsFY9fk5Y_XcN3viSQLX5S2Kw",
+      authDomain: "adepr-system.firebaseapp.com",
+      projectId: "adepr-system",
+      storageBucket: "adepr-system.appspot.com",
+      messagingSenderId: "370773084410",
+      appId: "1:370773084410:web:e89dfd42c6fecdc5222143",
+      measurementId: "G-J2ZGZ1EF54"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    let map;
+
+    async function initMap() {
+      const center = { lat: -1.95, lng: 30.05 }; // Kigali center
+
+      map = new google.maps.Map(document.getElementById("map"), {
+        center,
+        zoom: 8,
+      });
+
+      const querySnapshot = await getDocs(collection(db, "churches"));
+      querySnapshot.forEach((doc) => {
+        const data = doc.data();
+        const marker = new google.maps.Marker({
+          position: { lat: data.lat, lng: data.lng },
+          map: map,
+          title: data.name,
+        });
+
+        const info = new google.maps.InfoWindow({
+          content: `<strong>${data.name}</strong><br>${data.district}, ${data.sector}`
+        });
+
+        marker.addListener("click", () => {
+          info.open(map, marker);
+        });
+      });
+    }
+
+    window.initMap = initMap;
+  </script>
+
+  <!-- Google Maps API -->
+  <script async
+    src="https://maps.googleapis.com/maps/api/js?key=YOUR_GOOGLE_MAPS_API_KEY&callback=initMap">
+  </script>
+</body>
+</html>
