@@ -3,13 +3,13 @@
 <head>
   <meta charset="UTF-8" />
   <title>Insengero za ADEPR mu Rwanda</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link 
     rel="stylesheet" 
     href="https://unpkg.com/leaflet/dist/leaflet.css" 
   />
   <style>
-    /* Reset and base */
+    /* Reset no margin */
     * {
       box-sizing: border-box;
     }
@@ -20,73 +20,80 @@
       display: flex;
       flex-direction: column;
       min-height: 100vh;
-      -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
     }
     header {
       background: #007b5e;
       color: white;
-      padding: 16px 12px;
+      padding: 15px;
       text-align: center;
-      font-size: 1.6rem;
+      font-size: 1.8em;
       font-weight: 700;
       box-shadow: 0 3px 7px rgba(0,0,0,0.15);
     }
     #container {
       flex: 1;
       display: flex;
-      flex-direction: column;
-      padding: 8px 8px 0 8px;
-      max-width: 100%;
-      margin: 0 auto;
-      height: calc(100vh - 60px);
+      flex-direction: row;
+      gap: 10px;
+      padding: 10px;
+      max-width: 1200px;
+      margin: auto;
+      width: 100%;
     }
     #sidebar {
+      width: 320px;
       background: white;
       border-radius: 8px;
       box-shadow: 0 3px 10px rgba(0,0,0,0.1);
-      padding: 12px 15px;
+      padding: 15px;
       display: flex;
       flex-direction: column;
-      max-height: 40vh;
       overflow-y: auto;
-      margin-bottom: 8px;
+      max-height: calc(100vh - 90px);
     }
     #searchBox {
       display: flex;
-      gap: 8px;
-      margin-bottom: 12px;
+      gap: 10px;
+      margin-bottom: 15px;
     }
     #searchInput {
       flex: 1;
-      padding: 12px;
-      font-size: 1.1rem;
-      border: 1.5px solid #ccc;
-      border-radius: 8px;
+      padding: 10px;
+      font-size: 1em;
+      border: 1px solid #ccc;
+      border-radius: 5px;
       outline-offset: 2px;
       transition: border-color 0.3s;
     }
     #searchInput:focus {
       border-color: #007b5e;
     }
-    button {
+    #searchBtn {
       background: #007b5e;
       border: none;
       color: white;
-      padding: 12px 18px;
-      border-radius: 8px;
+      padding: 10px 15px;
+      border-radius: 5px;
       cursor: pointer;
-      font-weight: 700;
-      font-size: 1.1rem;
+      font-weight: 600;
       transition: background-color 0.3s;
-      user-select: none;
     }
-    button:hover, button:focus {
+    #searchBtn:hover {
       background: #005c47;
-      outline: none;
     }
     #locateBtn {
-      margin-bottom: 12px;
+      background: #007b5e;
+      color: white;
+      border: none;
+      padding: 12px;
+      border-radius: 6px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-bottom: 15px;
+      transition: background-color 0.3s;
+    }
+    #locateBtn:hover {
+      background: #005c47;
     }
     #churchList {
       flex: 1;
@@ -98,19 +105,16 @@
       margin: 0;
     }
     #churchList li {
-      padding: 12px 10px;
-      border-radius: 8px;
-      margin-bottom: 8px;
+      padding: 10px 8px;
+      border-radius: 5px;
+      margin-bottom: 7px;
       cursor: pointer;
-      border: 1.5px solid transparent;
-      font-size: 1.1rem;
+      border: 1px solid transparent;
       transition: background-color 0.3s, border-color 0.3s;
     }
-    #churchList li:hover,
-    #churchList li:focus {
+    #churchList li:hover {
       background-color: #e6f5f1;
       border-color: #007b5e;
-      outline: none;
     }
     #churchList li.active {
       background-color: #007b5e;
@@ -120,40 +124,38 @@
     }
     #map {
       flex: 1;
+      height: calc(100vh - 90px);
       border-radius: 8px;
       box-shadow: 0 3px 15px rgba(0,0,0,0.1);
-      min-height: 55vh;
     }
+
+    /* Loader */
     #loader {
-      position: fixed;
+      position: absolute;
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
       font-weight: 700;
-      background: rgba(255,255,255,0.95);
+      background: rgba(255,255,255,0.9);
       padding: 15px 30px;
-      border-radius: 12px;
-      box-shadow: 0 0 20px rgba(0,0,0,0.15);
+      border-radius: 10px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.1);
       display: none;
       z-index: 1000;
-      font-size: 1.2rem;
     }
 
-    /* Medium screens and up */
-    @media (min-width: 768px) {
+    /* Responsive */
+    @media(max-width: 900px){
       #container {
-        flex-direction: row;
-        max-width: 1200px;
-        height: calc(100vh - 60px);
+        flex-direction: column;
       }
       #sidebar {
-        width: 350px;
-        max-height: none;
-        margin-bottom: 0;
+        width: 100%;
+        max-height: 300px;
       }
       #map {
-        min-height: auto;
-        height: 100%;
+        height: 400px;
+        border-radius: 0;
       }
     }
   </style>
@@ -164,19 +166,19 @@
 
 <div id="container">
 
-  <aside id="sidebar" role="complementary" aria-label="Urutonde rw'insengero n'ubushakashatsi">
+  <aside id="sidebar">
     <div id="searchBox">
-      <input type="search" id="searchInput" placeholder="Andika izina ry'itorero ushaka..." aria-label="Shakisha insengero" />
+      <input type="text" id="searchInput" placeholder="Andika izina ry'itorero ushaka..." aria-label="Shakisha insengero" />
       <button id="searchBtn" aria-label="Shakisha">Shaka</button>
     </div>
     <button id="locateBtn" aria-label="Erekana insengero hafi yanjye">Erekana Insengero Hafi Yanjye</button>
-    <div id="churchList" tabindex="0" aria-live="polite" aria-atomic="true"></div>
+    <div id="churchList" aria-live="polite" aria-atomic="true"></div>
   </aside>
 
-  <main id="map" role="region" aria-label="Ikarita y'insengero"></main>
+  <div id="map"></div>
 </div>
 
-<div id="loader" aria-live="assertive" aria-atomic="true">Ikarita iri gupakirwa...</div>
+<div id="loader">Ikarita iri gupakirwa...</div>
 
 <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 <script>
@@ -184,6 +186,7 @@
   function showLoader() { loader.style.display = 'block'; }
   function hideLoader() { loader.style.display = 'none'; }
 
+  // Custom icon for church
   const churchIcon = L.icon({
     iconUrl: 'https://cdn-icons-png.flaticon.com/512/189/189792.png',
     iconSize: [38, 38],
@@ -191,15 +194,20 @@
     popupAnchor: [0, -38]
   });
 
+  // Ikarita y'ahabanza Kigali
   var map = L.map('map').setView([-1.9706, 30.1044], 8);
+
   showLoader();
 
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '&copy; OpenStreetMap contributors'
   }).addTo(map);
 
-  map.whenReady(() => { hideLoader(); });
+  map.whenReady(() => {
+    hideLoader();
+  });
 
+  // Insengero na details zabo
   const churches = [
     {
       name: "ADEPR Kimisagara",
@@ -241,17 +249,19 @@
       email: "musanze@adepr.rw",
       serviceHours: "Ku Cyumweru, 7:30 AM - 11:30 AM"
     }
+    // Shyiramo andi matorero nk'uko ubishaka
   ];
 
+  // Markers
   let markers = [];
   const churchList = document.getElementById('churchList');
 
-  function clearMarkers() {
+  function clearMarkers(){
     markers.forEach(m => map.removeLayer(m));
     markers = [];
   }
 
-  function addMarkers(list) {
+  function addMarkers(list){
     clearMarkers();
     list.forEach((church, index) => {
       const marker = L.marker([church.lat, church.lon], {icon: churchIcon}).addTo(map);
@@ -264,13 +274,17 @@
         <div><strong>Amasaha yo gusenga:</strong> ${church.serviceHours}</div>
       `;
       marker.bindPopup(popupContent);
+
+      // Kuva marker igahita ifungura popup iyo tuyikandagiye
       marker.on('click', () => {
         setActiveListItem(index);
       });
+
       markers.push(marker);
     });
   }
 
+  // Shyiraho list y'insengero
   function displayChurchList(list) {
     if(list.length === 0) {
       churchList.innerHTML = "<p>Nta nsengero zihari zahuye n'ibyo wasabye.</p>";
@@ -280,6 +294,7 @@
       <li tabindex="0" data-index="${i}">${church.name}<br><small>${church.address}</small></li>
     `).join('') + "</ul>";
 
+    // Shyiraho event ku items zo mu list
     const items = churchList.querySelectorAll('li');
     items.forEach(item => {
       item.addEventListener('click', () => {
@@ -296,19 +311,20 @@
       });
     });
 
+    // Default active item first one
     setActiveListItem(0);
   }
 
+  // Shyiraho style y'item iri active muri list
   function setActiveListItem(index) {
     const items = churchList.querySelectorAll('li');
     items.forEach(item => item.classList.remove('active'));
     if(items[index]){
       items[index].classList.add('active');
-      // Scroll to item smoothly
-      items[index].scrollIntoView({behavior: "smooth", block: "center"});
     }
   }
 
+  // Search function
   function searchChurches() {
     const term = document.getElementById('searchInput').value.trim().toLowerCase();
     if(term === '') {
@@ -325,6 +341,7 @@
     }
   }
 
+  // Geolocation (Erekana insengero hafi yawe)
   function locateUser() {
     if(!navigator.geolocation) {
       alert("Igikoresho cyawe ntigishyigikira uburyo bwo kumenya aho uri.");
@@ -335,20 +352,25 @@
       hideLoader();
       const {latitude, longitude} = position.coords;
       map.setView([latitude, longitude], 12);
+      // Shyiraho marker y'umukoresha
       const userMarker = L.circleMarker([latitude, longitude], {
-        radius: 9,
+        radius: 8,
         fillColor: "#007b5e",
         color: "#004033",
         weight: 2,
         opacity: 0.9,
         fillOpacity: 0.7
-      }).addTo(map).bindPopup("Aha ndi njye!").openPopup();
+      }).addTo(map).bindPopup("Aha ndi njye!");
+
+      // Shyira imbere uyu marker
+      userMarker.openPopup();
     }, err => {
       hideLoader();
       alert("Ntibishobotse kumenya aho uri: " + err.message);
     });
   }
 
+  // Events
   document.getElementById('searchBtn').addEventListener('click', searchChurches);
   document.getElementById('searchInput').addEventListener('keydown', (e) => {
     if(e.key === 'Enter') {
