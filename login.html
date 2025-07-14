@@ -1,103 +1,93 @@
 <!DOCTYPE html>
 <html lang="rw">
 <head>
-  <meta charset="UTF-8" />
-  <title>Injira - ADEPR Dashboard</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <title>Kwinjira - ADEPR Church</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     body {
       font-family: 'Segoe UI', sans-serif;
-      background: #f0f7f5;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      margin: 0;
+      background-color: #f0f7f6;
+      padding: 40px 20px;
+      max-width: 500px;
+      margin: auto;
     }
+
+    h2 {
+      text-align: center;
+      color: #007b5e;
+    }
+
     form {
       background: white;
       padding: 30px;
       border-radius: 8px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-      width: 300px;
-      display: flex;
-      flex-direction: column;
-      gap: 15px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
     }
+
+    label {
+      display: block;
+      margin-top: 15px;
+      font-weight: bold;
+    }
+
     input {
+      width: 100%;
       padding: 10px;
-      border-radius: 4px;
+      margin-top: 5px;
       border: 1px solid #ccc;
-      font-size: 1em;
+      border-radius: 5px;
     }
+
     button {
-      background: #007b5e;
+      margin-top: 20px;
+      background-color: #007b5e;
       color: white;
       padding: 10px;
+      width: 100%;
       border: none;
       border-radius: 5px;
+      font-size: 16px;
       cursor: pointer;
-      font-size: 1em;
     }
+
     button:hover {
-      background: #005c47;
+      background-color: #005c47;
     }
-    h2 {
+
+    .link {
       text-align: center;
+      margin-top: 15px;
+    }
+
+    .link a {
       color: #007b5e;
-      margin-bottom: 10px;
-    }
-    .error {
-      color: red;
-      text-align: center;
-      font-size: 0.9em;
+      text-decoration: none;
     }
   </style>
 </head>
 <body>
 
-<form id="loginForm">
-  <h2>Injira - ADEPR Dashboard</h2>
-  <input type="email" id="email" placeholder="Email" required />
-  <input type="password" id="password" placeholder="Ijambobanga" required />
-  <button type="submit">Injira</button>
-  <div class="error" id="errorMsg"></div>
-</form>
+  <h2>Injira muri Konti ya ADEPR</h2>
 
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <form id="loginForm">
+    <label for="email">Imeli:</label>
+    <input type="email" id="email" required>
 
-<script>
-  const firebaseConfig = {
-    apiKey: "AIzaSyCxKjaqkSEsFY9fk5Y_XcN3viSQLX5S2Kw",
-    authDomain: "adepr-system.firebaseapp.com",
-    projectId: "adepr-system",
-    storageBucket: "adepr-system.firebasestorage.app",
-    messagingSenderId: "370773084410",
-    appId: "1:370773084410:web:e89dfd42c6fecdc5222143",
-    measurementId: "G-J2ZGZ1EF54"
-  };
+    <label for="password">Ijambo banga:</label>
+    <input type="password" id="password" required>
 
-  firebase.initializeApp(firebaseConfig);
-  const auth = firebase.auth();
+    <button type="submit">Injira</button>
 
-  const loginForm = document.getElementById('loginForm');
-  const errorMsg = document.getElementById('errorMsg');
+    <div class="link">
+      Nta konti ufite? <a href="register.html">Iyandikishe</a>
+    </div>
+  </form>
 
-  loginForm.addEventListener('submit', (e) => {
-    e.preventDefault();
-    const email = loginForm.email.value;
-    const password = loginForm.password.value;
-
-    auth.signInWithEmailAndPassword(email, password)
-      .then(() => {
-        window.location.href = "admin-dashboard.html";
-      })
-      .catch((error) => {
-        errorMsg.textContent = "Email cyangwa ijambobanga si byo. Ongera ugerageze.";
-      });
-  });
-</script>
-
+  <!-- Firebase SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js"></script>
+  <script src="firebaseConfig.js"></script>
+  <script src="login.js"></script>
 </body>
 </html>
