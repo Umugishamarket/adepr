@@ -1,132 +1,120 @@
 <!DOCTYPE html>
 <html lang="rw">
 <head>
-  <meta charset="UTF-8" />
-  <title>Kwiyandikisha - ADEPR</title>
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-    import {
-      getAuth,
-      createUserWithEmailAndPassword,
-      updateProfile
-    } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-    import {
-      getFirestore,
-      doc,
-      setDoc
-    } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
-
-    const firebaseConfig = {
-      apiKey: "AIzaSyCxKjaqkSEsFY9fk5Y_XcN3viSQLX5S2Kw",
-      authDomain: "adepr-system.firebaseapp.com",
-      projectId: "adepr-system",
-      storageBucket: "adepr-system.appspot.com",
-      messagingSenderId: "370773084410",
-      appId: "1:370773084410:web:e89dfd42c6fecdc5222143",
-      measurementId: "G-J2ZGZ1EF54"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    const db = getFirestore(app);
-
-    async function registerUser(event) {
-      event.preventDefault();
-
-      const email = document.getElementById("email").value;
-      const password = document.getElementById("password").value;
-      const name = document.getElementById("name").value;
-      const church = document.getElementById("church").value;
-      const location = document.getElementById("location").value;
-
-      if (!email || !password || !name || !church || !location) {
-        alert("Shyiramo amakuru yose asabwa.");
-        return;
-      }
-
-      try {
-        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-        const user = userCredential.user;
-
-        // Update display name
-        await updateProfile(user, { displayName: name });
-
-        // Save profile in Firestore
-        await setDoc(doc(db, "users", user.uid), {
-          name,
-          email,
-          church,
-          location,
-          role: "member",  // default role
-          createdAt: new Date()
-        });
-
-        alert("Wiyandikishije neza! Injira noneho.");
-        window.location.href = "login.html";
-
-      } catch (error) {
-        alert("Ikosa: " + error.message);
-      }
-    }
-  </script>
-
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Kwiyandikisha - ADEPR Church</title>
   <style>
     body {
       font-family: 'Segoe UI', sans-serif;
-      background: #f0fdf8;
-      padding: 40px;
-      display: flex;
-      justify-content: center;
-    }
-
-    form {
-      background: white;
-      padding: 30px;
-      border-radius: 12px;
-      box-shadow: 0 0 15px rgba(0,0,0,0.1);
-      width: 350px;
+      background-color: #f9fdfc;
+      padding: 40px 20px;
+      max-width: 600px;
+      margin: auto;
     }
 
     h2 {
       text-align: center;
       color: #007b5e;
-      margin-bottom: 20px;
     }
 
-    input {
-      width: 100%;
-      padding: 12px;
-      margin: 10px 0;
+    form {
+      background: white;
+      padding: 30px;
       border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    label {
+      display: block;
+      margin-top: 15px;
+      font-weight: bold;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
       border: 1px solid #ccc;
+      border-radius: 5px;
     }
 
     button {
-      width: 100%;
-      padding: 14px;
+      margin-top: 20px;
       background-color: #007b5e;
-      border: none;
-      border-radius: 8px;
       color: white;
+      padding: 10px;
+      width: 100%;
+      border: none;
+      border-radius: 5px;
       font-size: 16px;
       cursor: pointer;
-      margin-top: 15px;
     }
 
     button:hover {
       background-color: #005c47;
     }
+
+    .link {
+      text-align: center;
+      margin-top: 15px;
+    }
+
+    .link a {
+      color: #007b5e;
+      text-decoration: none;
+    }
   </style>
 </head>
 <body>
-  <form id="registerForm" onsubmit="registerUser(event)">
-    <h2>Kwiyandikisha</h2>
-    <input type="text" id="name" placeholder="Izina ryawe" required />
-    <input type="email" id="email" placeholder="Email yawe" required />
-    <input type="password" id="password" placeholder="Ijambo ry’ibanga" required />
-    <input type="text" id="church" placeholder="Itorero usengeramo" required />
-    <input type="text" id="location" placeholder="Aho utuye (akarere/umujyi)" required />
+
+  <h2>Iyandikishe nk’Umukoresha wa ADEPR</h2>
+
+  <form id="registerForm">
+    <label for="names">Amazina yombi:</label>
+    <input type="text" id="names" name="names" required>
+
+    <label for="email">Imeli:</label>
+    <input type="email" id="email" name="email" required>
+
+    <label for="phone">Telefoni:</label>
+    <input type="tel" id="phone" name="phone" required>
+
+    <label for="district">Akarere:</label>
+    <input type="text" id="district" name="district" required>
+
+    <label for="church">Itorero urimo:</label>
+    <input type="text" id="church" name="church" required>
+
+    <label for="role">Inshingano zawe (urwego):</label>
+    <select id="role" name="role" required>
+      <option value="">-- Hitamo --</option>
+      <option value="umukristo">Umukristo</option>
+      <option value="umuyobozi-itorero">Umuyobozi w’itorero</option>
+      <option value="umuyobozi-paroisse">Umuyobozi wa Paroisse</option>
+      <option value="umuyobozi-ururembo">Umuyobozi w’Ururembo</option>
+      <option value="umuyobozi-bukuru">Ubuyobozi Bukuru</option>
+      <option value="cep">CEP - Kaminuza</option>
+    </select>
+
+    <label for="password">Ijambo banga (Password):</label>
+    <input type="password" id="password" name="password" required>
+
     <button type="submit">Iyandikishe</button>
+
+    <div class="link">
+      Usanzwe ufite konti? <a href="login.html">Injira hano</a>
+    </div>
   </form>
+
+  <script>
+    // Firebase auth integration ushobora kuhakomeza
+    document.getElementById("registerForm").addEventListener("submit", function (e) {
+      e.preventDefault();
+      alert("Iyandikisha yoherejwe! Ushobora gukomeza gukora Firebase integration.");
+      // Aha washyiramo firebase.auth().createUserWithEmailAndPassword(...)
+    });
+  </script>
+
 </body>
 </html>
