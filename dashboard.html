@@ -3,127 +3,120 @@
 <head>
   <meta charset="UTF-8">
   <title>Dashboard - Umukristo</title>
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-    import { getFirestore, doc, getDoc, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
-
-    const firebaseConfig = {
-      apiKey: "AIzaSyCxKjaqkSEsFY9fk5Y_XcN3viSQLX5S2Kw",
-      authDomain: "adepr-system.firebaseapp.com",
-      projectId: "adepr-system",
-      storageBucket: "adepr-system.appspot.com",
-      messagingSenderId: "370773084410",
-      appId: "1:370773084410:web:e89dfd42c6fecdc5222143",
-      measurementId: "G-J2ZGZ1EF54"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    const db = getFirestore(app);
-
-    onAuthStateChanged(auth, async (user) => {
-      if (!user) {
-        window.location.href = "login.html";
-        return;
-      }
-
-      // Tugaragaze izina n’amakuru ye
-      const userDoc = await getDoc(doc(db, "users", user.uid));
-      if (userDoc.exists()) {
-        const data = userDoc.data();
-        document.getElementById("welcome").textContent = `Murakaza neza ${data.name}`;
-        document.getElementById("email").textContent = data.email;
-        document.getElementById("church").textContent = data.church;
-        document.getElementById("location").textContent = data.location;
-      }
-
-      // Tugaragaze services yasabye
-      const q = query(collection(db, "service_requests"), where("uid", "==", user.uid));
-      const querySnapshot = await getDocs(q);
-      let servicesList = "";
-      querySnapshot.forEach((doc) => {
-        const s = doc.data();
-        servicesList += `<li><strong>${s.service}</strong> - ${s.status || 'Pending'} </li>`;
-      });
-
-      document.getElementById("services").innerHTML = servicesList || "<li>Nta serivisi wasabye.</li>";
-    });
-
-    window.logoutUser = async function () {
-      await signOut(auth);
-      window.location.href = "login.html";
-    };
-  </script>
-
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     body {
-      font-family: Arial, sans-serif;
-      background: #f3f9f7;
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f2fdfb;
       padding: 30px;
+      margin: 0;
     }
 
     .container {
-      background: white;
-      padding: 25px;
-      border-radius: 12px;
-      max-width: 700px;
+      max-width: 800px;
       margin: auto;
-      box-shadow: 0 0 12px rgba(0,0,0,0.1);
     }
 
-    h2 {
+    h1 {
       color: #007b5e;
+      text-align: center;
     }
 
-    .info p {
-      margin: 5px 0;
-    }
-
-    ul {
-      list-style-type: none;
-      padding-left: 0;
-    }
-
-    li {
-      background: #e9f7f2;
-      padding: 10px;
-      margin-bottom: 8px;
-      border-left: 5px solid #007b5e;
-    }
-
-    button {
+    .card {
+      background: white;
+      padding: 20px;
       margin-top: 20px;
-      background: #d9534f;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+
+    .card h2 {
+      color: #007b5e;
+      margin-bottom: 10px;
+    }
+
+    .info {
+      line-height: 1.8;
+    }
+
+    .logout-btn {
+      margin-top: 20px;
+      background-color: #d9534f;
       color: white;
       border: none;
-      padding: 12px 20px;
-      font-size: 16px;
-      border-radius: 8px;
+      padding: 10px 20px;
+      border-radius: 5px;
       cursor: pointer;
     }
 
-    button:hover {
-      background: #c9302c;
+    .logout-btn:hover {
+      background-color: #c9302c;
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <h2 id="welcome">Murakaza neza</h2>
+    <h1>Murakaza neza, <span id="userName">Umukristo</span></h1>
 
-    <div class="info">
-      <p><strong>Email:</strong> <span id="email"></span></p>
-      <p><strong>Itorero:</strong> <span id="church"></span></p>
-      <p><strong>Akarere/Umujyi:</strong> <span id="location"></span></p>
+    <div class="card">
+      <h2>Amakuru yawe</h2>
+      <div class="info">
+        <p><strong>Amazina:</strong> <span id="names"></span></p>
+        <p><strong>Email:</strong> <span id="email"></span></p>
+        <p><strong>Telefoni:</strong> <span id="phone"></span></p>
+        <p><strong>Akarere:</strong> <span id="district"></span></p>
+        <p><strong>Itorero:</strong> <span id="church"></span></p>
+        <p><strong>Inshingano:</strong> <span id="role"></span></p>
+        <p><strong>Igihe wiyandikishirije:</strong> <span id="createdAt"></span></p>
+      </div>
+      <button class="logout-btn" onclick="logout()">Sohoka</button>
     </div>
-
-    <h3>Amaserivisi Wasabye:</h3>
-    <ul id="services">
-      <li>Turimo kubigaragaza...</li>
-    </ul>
-
-    <button onclick="logoutUser()">Sohoka</button>
   </div>
+
+  <!-- Firebase SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js"></script>
+  <script src="firebaseConfig.js"></script>
+
+  <script>
+    const userName = document.getElementById("userName");
+    const names = document.getElementById("names");
+    const email = document.getElementById("email");
+    const phone = document.getElementById("phone");
+    const district = document.getElementById("district");
+    const church = document.getElementById("church");
+    const role = document.getElementById("role");
+    const createdAt = document.getElementById("createdAt");
+
+    firebase.auth().onAuthStateChanged((user) => {
+      if (user) {
+        const uid = user.uid;
+
+        firebase.firestore().collection("abakristo").doc(uid).get()
+          .then(doc => {
+            if (doc.exists) {
+              const data = doc.data();
+              userName.textContent = data.names;
+              names.textContent = data.names;
+              email.textContent = data.email;
+              phone.textContent = data.phone;
+              district.textContent = data.district;
+              church.textContent = data.church;
+              role.textContent = data.role;
+              createdAt.textContent = new Date(data.createdAt).toLocaleString();
+            }
+          });
+      } else {
+        window.location.href = "login.html";
+      }
+    });
+
+    function logout() {
+      firebase.auth().signOut().then(() => {
+        window.location.href = "login.html";
+      });
+    }
+  </script>
 </body>
 </html>
