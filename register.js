@@ -1,6 +1,4 @@
-// initialize Firebase (ibyo biri muri firebaseConfig.js)
-const auth = firebase.auth();
-const db = firebase.firestore();
+// register.js
 
 document.getElementById("registerForm").addEventListener("submit", function (e) {
   e.preventDefault();
@@ -13,12 +11,10 @@ document.getElementById("registerForm").addEventListener("submit", function (e) 
   const role = document.getElementById("role").value;
   const password = document.getElementById("password").value;
 
-  // Kwiyandikisha mu auth
   auth.createUserWithEmailAndPassword(email, password)
     .then((userCredential) => {
       const user = userCredential.user;
 
-      // Kwiyandikisha muri Firestore
       return db.collection("abakristo").doc(user.uid).set({
         uid: user.uid,
         names,
